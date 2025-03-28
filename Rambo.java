@@ -13,15 +13,16 @@ public class Rambo extends AdvancedRobot {
 	boolean lockForward = false;
 	boolean getOutOfBourder=false;
 	boolean type = false;	
+	
 int count = 0;
 	
     public void run() {
 	
         // Cores
-        setBodyColor(java.awt.Color.blue);
+        setBodyColor(java.awt.Color.yellow);
         setGunColor(java.awt.Color.blue);
-        setRadarColor(java.awt.Color.blue);
-        setBulletColor(java.awt.Color.blue);
+        setRadarColor(java.awt.Color.black);
+        setBulletColor(java.awt.Color.red);
         setScanColor(java.awt.Color.blue);
 
         // Loop 
@@ -30,22 +31,18 @@ int count = 0;
 			if (lockForward=true){
 			
 				movingForward = true;
-	            setAhead(100);
-	           	setTurnRight(95);
-				
+	            ahead(200);
+				turnRight(85);
+				setTurnRadarRight(360);
 			}
-
-
             execute();
         }
     }
 
     public void onScannedRobot(ScannedRobotEvent e) {
 
-            setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());
-            
-
 			double distance = e.getDistance();
+			
 	        double power = 3 /distance*200; // Quanto maior a distância, menor a força do tiro
 	        
 	        
@@ -53,14 +50,13 @@ int count = 0;
 	            power = 1;
 	        } else if (power > 3) {
 	            power = 3;
-	        }
-
-        setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());
+	        }	
+		
         
         // Atirar com a força calculada e nao atirar se estiver longe
 		if (distance<800){
 	        fire(power);
-			out.println(Math.round(power));
+			//out.println(Math.round(power));
 		}
 		if (distance<300){
 			setBack(90);
@@ -68,26 +64,9 @@ int count = 0;
 		}else{
 			lockForward=false;
 		}
-		if (movingForward = true){
-			if (type)
-				back(10);
-			else
-				setAhead(10);
-			count+=1;
-			}
-		else{
-			
-			if (type)
-				setAhead(10);
-			else
-				back(10);
-			count+=1;
-			}
-		if (count>=100){
-			type = !type;
-			count = 0;
-			}
-		setTurnLeft(20);
+		
+		setTurnGunRight((getHeading() + e.getBearing()) - getGunHeading());
+
     }
 	
 	public void onHitByBullet(HitByBulletEvent e){
@@ -107,22 +86,22 @@ int count = 0;
 	
 	public void onHitRobot(HitRobotEvent e) {
 		
-		if (e.isMyFault()) {
-			reverseDirection();
-			setTurnRight(60);
-			back(80);
-		}
+		if (movingForward)
+				back(50);
+			else
+				setAhead(50);
+			setTurnRight(180);
 	}
 	
 	public void onHitWall(HitWallEvent e) {
-
-			
+	
 			if (movingForward)
-			back(100);
+				back(50);
 			else
-			setAhead(100);
-			
-			reverseDirection();
+				setAhead(50);
+			turnRight(180);
+			//setTurnRight();
+			//reverseDirection();
 		
 	}
 	
