@@ -52,25 +52,24 @@ int count = 0;
 	            power = 3;
 	        }	
 		
-        
+        setTurnGunRight((getHeading() + e.getBearing()) - getGunHeading());
         // Atirar com a força calculada e nao atirar se estiver longe
-		if (distance<800){
-	        fire(power);
-			//out.println(Math.round(power));
-		}
+	
 		if (distance<300){
 			setBack(90);
 			lockForward=true;
 		}else{
 			lockForward=false;
 		}
-		
-		setTurnGunRight((getHeading() + e.getBearing()) - getGunHeading());
-
+	if (distance<800){
+	        fire(power);
+			//out.println(Math.round(power));
+		}
     }
 	
 	public void onHitByBullet(HitByBulletEvent e){
-		reverseDirection();
+		back(50);
+		setTurnLeft(30);
 		
 	}
 	
